@@ -5,6 +5,8 @@ import styled from "@emotion/styled";
 import { useQuery } from "../../core/hooks/useQuery";
 import { useDebounceValue } from "../../core/hooks/useDebounceValue";
 import { getMockData } from "../../api/getMockData";
+import { Spinner } from "../../components/Spiner";
+import { List } from "./components/List";
 
 const FIELD_NAME = "search";
 
@@ -12,11 +14,17 @@ export const NamesList = () => {
   const query = useQuery();
   const { push } = useHistory();
   const [data, setData] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  console.log(loading);
   const searchQuery = useMemo(() => query.get(FIELD_NAME) || "", [query]);
   const debounceSearch = useDebounceValue<string | null>(searchQuery);
 
   useEffect(() => {
-    getMockData(debounceSearch || "").then((data) => setData(data));
+    setLoading(true);
+    getMockData(debounceSearch || "").then((data) => {
+      setData(data);
+      setLoading(false);
+    });
   }, [debounceSearch]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,12 +40,7 @@ export const NamesList = () => {
         label={"Search"}
         onChange={handleChange}
       />
-      <NamesListWrapper>
-        <ListTitle>Names:</ListTitle>
-        {data.map((name, index) => (
-          <li key={index}>{name}</li>
-        ))}
-      </NamesListWrapper>
+      {loading ? <Spinner /> : <List data={data} />}
     </Wrapper>
   );
 };
@@ -52,24 +55,4 @@ const Wrapper = styled.div`
 
 const Title = styled.h1`
   color: #344472;
-`;
-
-const NamesListWrapper = styled.ul`
-  max-width: 700px;
-  width: 100%;
-  margin: 18px 0;
-  border: 1px solid gray;
-  & > li {
-    padding: 12px;
-    list-style-type: none;
-    border-bottom: 1px solid gray;
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-`;
-
-const ListTitle = styled.h2`
-  padding: 8px;
-  border-bottom: 1px solid gray;
 `;
