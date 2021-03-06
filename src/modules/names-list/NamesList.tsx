@@ -15,7 +15,6 @@ export const NamesList = () => {
   const { push } = useHistory();
   const [data, setData] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  console.log(loading);
   const searchQuery = useMemo(() => query.get(FIELD_NAME) || "", [query]);
   const debounceSearch = useDebounceValue<string | null>(searchQuery);
 
