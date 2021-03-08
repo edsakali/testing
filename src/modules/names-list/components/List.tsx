@@ -1,17 +1,19 @@
 import styled from "@emotion/styled";
 
 interface Props {
-  data: string[];
+  items: string[];
 }
 
-export const List = ({ data }: Props) => (
-  <NamesListWrapper>
-    <ListTitle>Names:</ListTitle>
-    {data.map((name, index) => (
-      <li key={index}>{name}</li>
-    ))}
-  </NamesListWrapper>
-);
+export const List = ({ items }: Props) => {
+  return (
+    <NamesListWrapper>
+      <ListTitle>Names:</ListTitle>
+      {items.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </NamesListWrapper>
+  );
+};
 
 const NamesListWrapper = styled.ul`
   max-width: 700px;

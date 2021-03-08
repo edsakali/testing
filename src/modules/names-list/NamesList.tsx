@@ -4,24 +4,24 @@ import styled from "@emotion/styled";
 import { Input } from "../../components/ui/Input";
 import { useQuery } from "../../core/hooks/useQuery";
 import { useDebounceValue } from "../../core/hooks/useDebounceValue";
-import { getMockData } from "../../api/getMockData";
 import { Spinner } from "../../components/Spiner";
 import { List } from "./components/List";
+import { getNamesList } from "../../api/getNamesList";
 
 const FIELD_NAME = "search";
 
 export const NamesList = () => {
   const query = useQuery();
   const { push } = useHistory();
-  const [data, setData] = useState<string[]>([]);
+  const [namesList, setNamesList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const searchQuery = useMemo(() => query.get(FIELD_NAME) || "", [query]);
   const debounceSearch = useDebounceValue<string | null>(searchQuery);
 
   useEffect(() => {
     setLoading(true);
-    getMockData(debounceSearch || "").then((data) => {
-      setData(data);
+    getNamesList(debounceSearch || "").then((items) => {
+      setNamesList(items);
       setLoading(false);
     });
   }, [debounceSearch]);
@@ -39,7 +39,7 @@ export const NamesList = () => {
         label={"Search"}
         onChange={handleChange}
       />
-      {loading ? <Spinner /> : <List data={data} />}
+      {loading ? <Spinner /> : <List items={namesList} />}
     </Wrapper>
   );
 };
